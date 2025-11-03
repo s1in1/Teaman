@@ -78,7 +78,8 @@ $stateCom = $connection->prepare("INSERT INTO task_comments (task_id, user_id, c
     $stateCom->bind_param("iis", $task_id, $user_id, $comment);
     $stateCom->execute();
     $stateCom->close();
-    header("Location: proj.php?id=$project_id"); exit();
+    header("Location: proj.php?id=$project_id"); 
+    exit();
   }
 }
 
@@ -93,7 +94,6 @@ $task_result = mysqli_query($connection, "
     WHERE t.project_id = $project_id
     ORDER BY t.created_at DESC
 ");
-
 
 ?>
 
@@ -161,11 +161,11 @@ $task_result = mysqli_query($connection, "
   <?php while ($task = mysqli_fetch_assoc($task_result)) {
     $task_id = $task['id'];
     $task_comments = [];
-  $sql_comments = "SELECT c.comment, u.first_name, u.last_name, c.created_at
-                  FROM task_comments c
-                  JOIN users u ON c.user_id = u.id
-                  WHERE c.task_id = $task_id
-                  ORDER BY c.created_at ASC";
+    $sql_comments = "SELECT c.comment, u.first_name, u.last_name, c.created_at
+                    FROM task_comments c
+                    JOIN users u ON c.user_id = u.id
+                    WHERE c.task_id = $task_id
+                    ORDER BY c.created_at ASC";
 
   $comments_result = mysqli_query($connection, $sql_comments);
   if ($comments_result !== false) {
@@ -238,7 +238,6 @@ $task_result = mysqli_query($connection, "
 
             <hr class="w-100">
 
-
             <div class="comments w-100 mt-3">
               <?php if (!empty($task_comments)): ?>
                 <?php foreach($task_comments as $comment): ?>
@@ -256,10 +255,8 @@ $task_result = mysqli_query($connection, "
       </div>
     </div>
     <?php } ?>
-
   </div>
   </div>
-
   </main>
 
   <script>

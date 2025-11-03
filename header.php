@@ -97,9 +97,8 @@
                     <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Уже есть аккаунт?</a>
                   </div>
                   
-                </form>
+                </form>              
               </div>
-
             </div>
           </div>
         </div>

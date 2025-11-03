@@ -15,6 +15,7 @@
   </head>
   <body style="background: linear-gradient(180deg, #1c1c1c 100%, #272727ff 0%, #1c1c1c 100%);">
 
+    <!-- HEADER -->
     <?php include('header.php') ?>
 
     <div class="container">
@@ -81,9 +82,6 @@
       </footer>
 
     </div>
-
-
- 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </body>

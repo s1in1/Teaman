@@ -39,7 +39,7 @@
           } else {
             $state = $conn->prepare("
                 SELECT t.id, t.name,
-                       EXISTS(SELECT 1 FROM team_members WHERE team_id = t.id AND user_id = ?) AS is_member
+                EXISTS(SELECT 1 FROM team_members WHERE team_id = t.id AND user_id = ?) AS is_member
                 FROM teams t
                 WHERE t.access_code = ?");
             $state->bind_param("is", $currentUserId, $code);
