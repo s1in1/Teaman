@@ -103,8 +103,8 @@
 
       <div class="modal fade" id="createProject" tabindex="-1">
         <div class="modal-dialog">
-          <form method="POST" class="modal-content">
-            <div class="modal-header"><h5>Создание проекта</h5></div>
+          <form method="POST" class="modal-content text-start">
+            <div class="modal-header"><h3>Создание проекта</h3></div>
             <div class="modal-body">
               <input type="hidden" name="create_project" value="1">
               <div class="mb-3">

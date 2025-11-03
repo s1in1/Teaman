@@ -138,7 +138,7 @@ $task_result = mysqli_query($connection, "
           <input type="hidden" name="action" value="create_task">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Новая задача</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
@@ -151,7 +151,6 @@ $task_result = mysqli_query($connection, "
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
             <button type="submit" class="btn btn-primary">Создать задачу</button>
           </div>
         </form>

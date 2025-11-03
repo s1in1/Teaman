@@ -6,7 +6,11 @@ body {
 
 h1, h2, h3 {
   font-family: 'Roboto Flex', sans-serif;
-  color: #F4F4F4 !important;
+  color: #F4F4F4!important;
+}
+
+input[type=checkbox]:checked{
+  background-color: #86C232!important;
 }
 
 .nav-link {
@@ -14,7 +18,7 @@ h1, h2, h3 {
 }
 
 .nav-link.active {
-  background-color: #86C232 !important;
+  background-color: #86C232!important;
   color: #F4F4F4;
 }
 
