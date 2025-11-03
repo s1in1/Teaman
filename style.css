@@ -1,0 +1,117 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #1c1c1c;
+  color: #F4F4F4;
+}
+
+header {
+  text-align: center;
+}
+
+h1, h2, h3 {
+  font-family: 'Roboto Flex', sans-serif;
+  color: #F4F4F4 !important;
+}
+
+.nav-link {
+  color: #c1c1c1;
+}
+
+.nav-link.active {
+  background-color: #86C232 !important;
+  color: #F4F4F4;
+}
+
+.nav-link:focus, .nav-link:hover {
+  color: #86C232;
+}
+
+.nav-item:focus, .nav-item:hover {
+  color: #86C232;
+}
+
+.btn-outline-primary {
+  color: #61892F;
+  border-color: #61892F;
+}
+
+.btn-outline-primary:hover {
+  transition: all 0.3s ease-in-out;
+  color: #F4F4F4;
+  border-color: #86C232;
+  background-color: #86C232;
+}
+
+.btn-primary {
+  color: #F4F4F4;
+  border-color: #86C232;
+  background-color: #86C232;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  color: #F4F4F4;
+  border-color: #61892F;
+  background-color: #61892F;
+}
+
+/* modal */
+
+.modal-content {
+  background-color: #212121;
+  color: #F4F4F4;
+  border: 1px solid #4D4D4D;
+}
+
+.form-control {
+  border: 1px solid #4D4D4D;
+  color: #F4F4F4;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  border-color: #F4F4F4;
+  box-shadow: none;
+  outline: 0;
+}
+
+.form-control::placeholder {
+  color: #4D4D4D;
+}
+
+.btn-close-white {
+  filter: invert(1); /* делает крестик белым */
+}
+
+.password-toggle {
+  cursor: pointer;
+}
+
+.bi .bi-lock-fill {
+  color: #F4F4F4;
+}
+
+/* cards */
+
+.card_team_back {
+  border: 1px solid white;
+  border-radius: 16px;
+  background-color: #212121;
+}
+
+.card_team_back button {
+  align-items: end;
+}
+
+.card-team {
+  color: #61892F;
+}
+
+.card-proj-p {
+  color: #F4F4F4;
+}
+
+/* footer */
+
+.footer-link:hover {
+  color: #61892F;
+}
