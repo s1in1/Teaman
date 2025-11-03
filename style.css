@@ -4,10 +4,6 @@ body {
   color: #F4F4F4;
 }
 
-header {
-  text-align: center;
-}
-
 h1, h2, h3 {
   font-family: 'Roboto Flex', sans-serif;
   color: #F4F4F4 !important;
@@ -32,25 +28,25 @@ h1, h2, h3 {
 
 .btn-outline-primary {
   color: #61892F;
-  border-color: #61892F;
+  border: none;
 }
 
 .btn-outline-primary:hover {
   transition: all 0.3s ease-in-out;
   color: #F4F4F4;
-  border-color: #86C232;
+  border: none;
   background-color: #86C232;
 }
 
 .btn-primary {
   color: #F4F4F4;
-  border-color: #86C232;
+  border: none;
   background-color: #86C232;
 }
 
 .btn-primary:hover, .btn-primary:focus {
   color: #F4F4F4;
-  border-color: #61892F;
+  border: none;
   background-color: #61892F;
 }
 

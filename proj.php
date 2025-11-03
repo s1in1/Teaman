@@ -132,7 +132,7 @@ $task_result = mysqli_query($connection, "
 
   <div class="row col-10 my-5" id="product-list">
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createTask" tabindex="-1" aria-labelledby="createTask" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <form class="modal-content" method="POST">
           <input type="hidden" name="action" value="create_task">

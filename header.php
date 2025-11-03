@@ -10,44 +10,43 @@
             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Команды</a>
 
           <?php } else { ?>
-              <a href="projects.php" class="nav-link me-3" data-bs-target="<?php
-                $current_page = basename($_SERVER['PHP_SELF']);
-                switch ($current_page) {
-                    case 'projects.php':
-                        echo '#createProject';
-                        break;
-                    case 'teams.php':
-                        echo '#';
-                        break;
-                    case 'contact.php':
-                        $title = 'Контакты';
-                        break;
-                    default:
-                        $title = 'Страница';
-                }
-                ?>    
-              ?>">Создать</a>
-              <a href="projects.php" class="nav-link me-3">Проекты</a>
-              <a href="teams.php" class="nav-link me-3">Команды</a>
-              <div class="ms-auto">
-                <ul class="nav row text-start flex-column pe-0 me-0">
-                  <li class="nav-item">
-                    <a href="profile.php" class="text-decoration-none" style="color: #f4f4f4;">
-                      <?= $_SESSION['user_name'] ?>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="profile.php" class="text-decoration-none" style="color: #4d4d4d;">
-                      <?= $_SESSION['user_email']; ?>
-                    </a>
-                  </li>
-                </ul>  
-              </div> 
-            
+
+            <?php
+            $modal_target = '';
+            if (strpos($_SERVER['REQUEST_URI'], '/projects.php') === 0) {
+                $modal_target = '#createProject';
+            } elseif (strpos($_SERVER['REQUEST_URI'], '/proj.php') === 0) {
+                $modal_target = '#createTask';
+            }
+            ?>
+
+            <?php if ($modal_target): ?>
+              <button type="button" href="#" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button>
+            <?php else: ?>
+              <span></span>
+            <?php endif; ?>
+
+            <a href="projects.php" class="nav-link me-3">Проекты</a>
+            <a href="teams.php" class="nav-link me-3">Команды</a>
+
+            <div class="ms-auto">
+              <ul class="nav row text-start flex-column pe-0 me-0">
+                <li class="nav-item">
+                  <a href="profile.php" class="text-decoration-none" style="color: #f4f4f4;">
+                    <?= htmlspecialchars($_SESSION['user_name']) ?>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="profile.php" class="text-decoration-none" style="color: #4d4d4d;">
+                    <?= htmlspecialchars($_SESSION['user_email']); ?>
+                  </a>
+                </li>
+              </ul>  
+            </div> 
+
           <?php } ?>  
         </div>
         
-
         <?php if (isset($_SESSION['auth_error'])) { ?>
           <div class="alert alert-danger"><?php echo $_SESSION['auth_error']; unset($_SESSION['auth_error']); ?></div>
         <?php } ?>
