@@ -1,5 +1,5 @@
-
 <?php session_start(); ?>
+<!DOCTYPE html>
 <html lang="ru" dir="ltr">
   <head>
     <meta charset="utf-8">

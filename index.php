@@ -1,8 +1,8 @@
-<?php session_start(); ?>
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
   <head>
-    <meta charset="utf-8">
+     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,40 +48,11 @@
         </div>
       </div>
 
-      <footer class="border-top py-2 mt-5">
-        <div class="container">
-          <div class="row align-items-center">              
-            <div class="col-md-6 mb-3 mb-md-0 gap-2">
-              <div class="d-flex align-items-center gap-2">
-                  
-                <div class="footer-icons">
-                  <span><img src="/img/Logo2.svg" alt="logo"></span>
-                </div>
-                      
-                <div class="ms-3">
-                  <a href="https://t.me/Dartder" target="_blank" >
-                    <i class="bi bi-telegram " style="font-size: 1.5rem; color: #86C232"></i>
-                  </a>
-                </div>
-                      
-                <div class="align-items-center justify-content-center ms-3 ">
-                  <a href="mailto:mirgalimovk06@gmail.com" target="_blank" class=" text-decoration-none rounded-circle d-flex align-items-center justify-content-center" style="width: 1.5rem; height: 1.5rem; background-color: #86C232;">
-                    <i class="bi bi-envelope-fill" style="font-size: 1rem; color: #1c1c1c;"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6 text-md-end">
-              <a href="#" class="text-decoration-none me-3 footer-link" style="color:#f4f4f4">Документация</a>
-              <a href="#" class="text-decoration-none footer-link" style="color:#f4f4f4">Политика конфиденциальности</a>
-            </div>
-
-          </div>
-        </div>
-      </footer>
-
     </div>
+
+    <!-- FOOTER -->
+
+    <?php include('footer.php') ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </body>

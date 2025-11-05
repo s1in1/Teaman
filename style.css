@@ -6,32 +6,32 @@ body {
 
 h1, h2, h3 {
   font-family: 'Roboto Flex', sans-serif;
-  color: #F4F4F4!important;
+  color: #F4F4F4 !important;
 }
 
 input[type=checkbox]:checked{
-  background-color: #86C232!important;
+  background-color: #045757 !important;
 }
 
 .nav-link {
   color: #c1c1c1;
 }
 
-.nav-link.active {
-  background-color: #86C232!important;
+/* .nav-link.active {
+  background-color: #045757!important;
+  color: #F4F4F4;
+} */
+
+.nav-link:hover {
   color: #F4F4F4;
 }
 
-.nav-link:focus, .nav-link:hover {
-  color: #86C232;
-}
-
 .nav-item:focus, .nav-item:hover {
-  color: #86C232;
+  color: #045757;
 }
 
 .btn-outline-primary {
-  color: #61892F;
+  color: #044343;
   border: none;
 }
 
@@ -39,19 +39,19 @@ input[type=checkbox]:checked{
   transition: all 0.3s ease-in-out;
   color: #F4F4F4;
   border: none;
-  background-color: #86C232;
+  background-color: #045757;
 }
 
 .btn-primary {
   color: #F4F4F4;
   border: none;
-  background-color: #86C232;
+  background-color: #045757;
 }
 
 .btn-primary:hover, .btn-primary:focus {
   color: #F4F4F4;
   border: none;
-  background-color: #61892F;
+  background-color: #044343 !important;
 }
 
 /* modal */
@@ -93,7 +93,7 @@ input[type=checkbox]:checked{
 /* cards */
 
 .card_team_back {
-  border: 1px solid white;
+  border: 1px solid #F4F4F4;
   border-radius: 16px;
   background-color: #212121;
 }
@@ -103,7 +103,7 @@ input[type=checkbox]:checked{
 }
 
 .card-team {
-  color: #61892F;
+  color: #044343;
 }
 
 .card-proj-p {
@@ -112,6 +112,6 @@ input[type=checkbox]:checked{
 
 /* footer */
 
-.footer-link:hover {
-  color: #61892F;
+.footer-links-mail:hover .footer-links-mail:focus {
+  color: #F4F4F4 !important;
 }

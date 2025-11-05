@@ -14,14 +14,14 @@ if (isset($_POST['register'])) {
         $_SESSION['auth_error'] = "Пользователь с таким email уже существует";
         header("Location: index.php");
         exit();
-    }
+    } 
 
     $sql = "INSERT INTO users (first_name, last_name, email, password, access_level)
             VALUES ('$first_name', '$last_name', '$email', '$password', 'user')";
     mysqli_query($connection, $sql) or die("Ошибка регистрации: " . mysqli_error($connection));
 
-    $_SESSION['auth_success'] = "Регистрация успешна. Войдите в систему.";
-    header("Location: index.php");
+    $_SESSION['auth_success'] = "Регистрация успешна. Войдите в систему."; 
+    header("Location: index.php?modal=success");
     exit();
 }
 
