@@ -39,11 +39,11 @@ if (isset($_POST['login'])) {
         $_SESSION['access_level'] = $user['access_level'];
         $_SESSION['team_id'] = $user['team_id'];
 
-        header("Location: profile.php");
+        header("Location: index.php");
         exit();
     } else {
         $_SESSION['auth_error'] = "Неверный логин или пароль";
-        header("Location: index.php");
+        header('Location: index.php');
         exit();
     }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
   <head>
-     <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,27 +24,27 @@
         <h1 class="display-5 fw-bold mb-3">Управление проектами в Teaman.</h1>
           <p class="mb-4 fs-4">Планируйте, отслеживайте и управляйте задачами с помощью современных инструментов</p>
           <div class="d-flex gap-2">
-            <button type="button" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4" data-bs-toggle="modal" data-bs-target="#registerModal">Начать сейчас</button>
-            <button type="button" class="btn btn-outline-secondary btn-mg px-4 rounded-4" data-bs-toggle="modal" data-bs-target="#registerModal">Узнать больше</button>
+            <button type="button" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4 fw-medium" data-bs-toggle="modal" data-bs-target="#registerModal">Начать сейчас</button>
+            <button type="button" class="btn btn-outline-secondary btn-mg px-4 rounded-4 fw-medium" data-bs-toggle="modal" data-bs-target="#registerModal">Узнать больше</button>
           </div>
       </div>
 
       <div class="container py-5 mb-5">
-        <h2 class="display-6 fw-bold mb-4">FAQ</h2>
+        <h2 class="display-5 fw-bold mb-4">FAQ</h2>
         
         <div class="border-bottom border-secondary mb-4">
-            <h3 class="h5 fw-bold">Для чего это нужно?</h3>
-            <p class="">Больше не нужно писать и рассылать письма, вспоминать важные задачи, отчитываться о проделанной работе - теперь все это в одном месте.</p>
+            <h3 class="fw-semibold">Для чего это нужно?</h3>
+            <p class="fs-6">Больше не нужно писать и рассылать письма, вспоминать важные задачи, отчитываться о проделанной работе - теперь все это в одном месте.</p>
         </div>
         
         <div class="border-bottom border-secondary mb-4">
-            <h3 class="h5 fw-bold">Что мне нужно для работы?</h3>
-            <p class="">Зарегистрируйтесь и войдите, создайте проект, пригласите в команду людей и добавьте ее в проект. Это все, что нужно для базовой работы.</p>
+            <h3 class="fw-semibold">Что мне нужно для работы?</h3>
+            <p class="fs-6">Зарегистрируйтесь и войдите, создайте команду, пригласите в нее людей, создайте проект с вашей командой. Это все, что нужно для базовой работы.</p>
         </div>
         
         <div class="mb-4">
-            <h3 class="h5 fw-bold">Почему мы?</h3>
-            <p class="">Teaman - это развивающееся отечественное решение с постоянной поддержкой, имеющее понятный интерфейс и богатый и легкий в освоении функционал.</p>
+            <h3 class="fw-semibold">Почему мы?</h3>
+            <p class="fs-6">Teaman - это развивающееся отечественное решение с постоянной поддержкой, имеющее понятный интерфейс и богатый и легкий в освоении функционал.</p>
         </div>
       </div>
 

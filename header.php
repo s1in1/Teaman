@@ -5,13 +5,13 @@
       <span class="fs-4"><img src="/img/Logo.svg" alt="teaman"></span>
     </a>
        
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center gap-3">
         
       <?php
-      if (!isset($_SESSION['user_id'])) { 
+        if (!isset($_SESSION['user_id'])) { 
       ?>
 
-        <a href="#" class="nav-link me-3" data-bs-toggle="modal" data-bs-target="#registerModal">Проекты</a>
+        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Проекты</a>
         <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Команды</a>
 
       <?php } else { 
@@ -19,11 +19,11 @@
         $connection = mysqli_connect("localhost", "root", "", "teaman");
         $user_id = (int)$_SESSION['user_id'];
         $res = mysqli_query($connection, "
-            SELECT u.*, t.name AS team_name
-            FROM users u
-            LEFT JOIN team_members tm ON u.id = tm.user_id
-            LEFT JOIN teams t ON tm.team_id = t.id
-            WHERE u.id = $user_id
+          SELECT u.*, t.name AS team_name
+          FROM users u
+          LEFT JOIN team_members tm ON u.id = tm.user_id
+          LEFT JOIN teams t ON tm.team_id = t.id
+          WHERE u.id = $user_id
         ");
         $user = mysqli_fetch_assoc($res);
 
@@ -36,7 +36,7 @@
 
         if ($modal_target): ?>
 
-          <button type="button" href="#" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button>
+          <button type="button" href="#" class="btn btn-primary btn-mg px-4 me-md-2 rounded-3" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button>
             
         <?php endif; ?>
 
@@ -46,21 +46,31 @@
         <div class="ms-auto">
           <ul class="nav row text-start flex-column pe-0 me-0">
             <li class="nav-item">
-              <a href="#" data-bs-toggle="#profileModal" style="color: #f4f4f4;">
+              <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" style="color: #f4f4f4;">
                 <?= htmlspecialchars($_SESSION['user_name']) ?>
               </a>
             </li>
             <li class="nav-item">
-              <a href="profile.php" style="color: #4d4d4d;">
+              <a href="profile.php" data-bs-toggle="modal" data-bs-target="#profileModal" style="color: #4d4d4d;">
                 <?= htmlspecialchars($_SESSION['user_email']); ?>
               </a>
             </li>
           </ul>  
         </div> 
 
-        <?php } ?>  
+      <?php } ?>  
 
-    </div> 
+        <div class="d-flex align-items-center">
+          <?php if (isset($_SESSION['auth_error'])) { ?>
+            <p class="text-danger"><?php echo $_SESSION['auth_error']; unset($_SESSION['auth_error']); ?></p>
+          <?php } ?>
+
+          <?php if (isset($_SESSION['auth_error'])) { ?>
+            <p class="text-danger"><?php echo $_SESSION['auth_error']; unset($_SESSION['auth_error']); ?></p>
+          <?php } ?>
+        </div>
+
+      </div> 
 
     <!-- Модальное окно регистрации-->
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
@@ -145,38 +155,20 @@
     </div>
 
     <!-- Модальное окно профиля -->
-    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-5 p-4 text-start">
-          <div class="container col-xxl-8 px-4 py-5">
-            <div class="row flex-lg-row-reverse align-items-center justify-content-center g-5 py-5">
-              <div class="col-lg-6">
-                <h3 class="mb-3">Профиль</h3>
-                <p><strong>Имя:</strong> <?php echo $user['first_name']; ?></p>
-                <p><strong>Фамилия:</strong> <?php echo $user['last_name']; ?></p>
-                <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
-                <p><strong>Уровень доступа:</strong> <?php echo $user['access_level']; ?></p>
-                <p><strong>Команда:</strong> <?php echo $user['team_name'] ?: 'Не назначена'; ?></p>
-                <hr>
-                <a href="auth.php?logout=1" class="btn btn-danger w-100">Выйти</a>
-              </div>
+    <?php
+      include('profile.php')
+    ?>
 
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <?php 
-  
-if (isset($_GET['modal']) && $_GET['modal'] == 'success') {
-echo'<script>
-    document.addEventListener("DOMContentLoaded", function() {
+    if (isset($_GET['modal']) && $_GET['modal'] == 'success') {
+    echo '<script>
+      document.addEventListener("DOMContentLoaded", function() {
         var modal = new bootstrap.Modal(document.getElementById("loginModal"));
         modal.show();
-    });
+      });
     </script>';
-}
+    }
   ?>
 </header>

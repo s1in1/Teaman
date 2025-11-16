@@ -10,48 +10,56 @@ h1, h2, h3 {
 }
 
 input[type=checkbox]:checked{
-  background-color: #045757 !important;
+  background-color: #86C232 !important;
+}
+
+.text-muted {
+  color: #c1c1c1 !important;
 }
 
 .nav-link {
   color: #c1c1c1;
 }
 
-/* .nav-link.active {
-  background-color: #045757!important;
+.nav-link.active {
+  background-color: #86C232 !important;
   color: #F4F4F4;
-} */
+  font-weight: 600;
+}
 
-.nav-link:hover {
+.nav-link:hover, .nav-link:focus {
   color: #F4F4F4;
+  font-weight: 500;
 }
 
 .nav-item:focus, .nav-item:hover {
-  color: #045757;
+  color: #61892F;
 }
 
 .btn-outline-primary {
-  color: #044343;
+  color: #86C232;
   border: none;
 }
 
 .btn-outline-primary:hover {
   transition: all 0.3s ease-in-out;
   color: #F4F4F4;
+
   border: none;
-  background-color: #045757;
+  background-color: #61892F;
 }
 
 .btn-primary {
   color: #F4F4F4;
+
   border: none;
-  background-color: #045757;
+  background-color: #86C232;
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:hover, .btn-primary:focus-visible {
   color: #F4F4F4;
   border: none;
-  background-color: #044343 !important;
+  background-color: #61892F !important;
 }
 
 /* modal */
@@ -103,7 +111,7 @@ input[type=checkbox]:checked{
 }
 
 .card-team {
-  color: #044343;
+  color: #86C232;
 }
 
 .card-proj-p {
