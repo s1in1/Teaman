@@ -1,4 +1,77 @@
-<?php session_start(); ?>
+<?php 
+  session_start(); 
+  include "./connection.php";
+
+  if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit;
+  }
+  $user_id = (int)$_SESSION['user_id'];
+  $project_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+  $sql_proj = "SELECT * FROM projects WHERE id = $project_id";
+  $proj_result = mysqli_query($connection, $sql_proj);
+  $project = mysqli_fetch_assoc($proj_result);
+  if (!$project) die("Проект не найден");
+  $sql_check_access = "
+    SELECT 1
+    FROM project_teams pt
+    INNER JOIN team_members tm ON tm.team_id = pt.team_id
+    WHERE pt.project_id = $project_id AND tm.user_id = $user_id
+    UNION
+    SELECT 1
+    FROM projects
+    WHERE id = $project_id AND owner_id = $user_id
+  ";
+  $access_result = mysqli_query($connection, $sql_check_access);
+  if (mysqli_num_rows($access_result) == 0) die("Нет доступа к проекту");
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'create_task') {
+      $title = mysqli_real_escape_string($connection, $_POST['title']);
+      $description = mysqli_real_escape_string($connection, $_POST['description']);
+      $sql_insert = "INSERT INTO tasks (title, description, status, author_id, project_id, created_at)
+                    VALUES ('$title', '$description', 'newtask', $user_id, $project_id, NOW())";
+      mysqli_query($connection, $sql_insert) or die(mysqli_error($connection));
+      header("Location: proj.php?id=$project_id"); exit();
+    }
+    if ($_POST['action'] === 'take_task') {
+      $task_id = (int)$_POST['task_id'];
+      $sql_update = "UPDATE tasks SET status = 'taskpr', executor_id = $user_id WHERE id = $task_id";
+      mysqli_query($connection, $sql_update) or die(mysqli_error($connection));
+      header("Location: proj.php?id=$project_id"); exit();
+    }
+    if ($_POST['action'] === 'complete_task') {
+      $task_id = (int)$_POST['task_id'];
+      $check = mysqli_query($connection, "SELECT executor_id FROM tasks WHERE id = $task_id");
+      $t = mysqli_fetch_assoc($check);
+      if ($t['executor_id'] != $user_id) die("Вы не исполнитель");
+      $sql_update = "UPDATE tasks SET status = 'taskend', completed_at = NOW() WHERE id = $task_id";
+      mysqli_query($connection, $sql_update) or die(mysqli_error($connection));
+      header("Location: proj.php?id=$project_id"); exit();
+    }
+    if ($_POST['action'] === 'add_comment') {
+      $task_id = $_POST['task_id'];
+      $user_id = $_SESSION['user_id'];
+      $comment = $_POST['comment'];
+      $stateCom = $connection->prepare("INSERT INTO task_comments (task_id, user_id, comment) VALUES (?, ?, ?)");
+      $stateCom->bind_param("iis", $task_id, $user_id, $comment);
+      $stateCom->execute();
+      $stateCom->close();
+      header("Location: proj.php?id=$project_id"); 
+      exit();
+    }
+  }
+  $task_result = mysqli_query($connection, "
+      SELECT t.id, t.title, t.description, t.status, t.created_at, t.completed_at,
+          CONCAT(a.first_name, ' ', a.last_name) AS author_name,
+          CONCAT(e.first_name, ' ', e.last_name) AS executor_name,
+          t.executor_id
+      FROM tasks t
+      INNER JOIN users a ON t.author_id = a.id
+      LEFT JOIN users e ON t.executor_id = e.id
+      WHERE t.project_id = $project_id
+      ORDER BY t.created_at DESC
+  ");  
+?>
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
   <head>
@@ -14,92 +87,6 @@
     <title>teaman</title>
   </head>
   <body>
-
-  <?php
-    $connection = mysqli_connect("localhost", "root", "", "teaman")
-    or die("Ошибка подключения: " . mysqli_error($connection));
-
-    if (!isset($_SESSION['user_id'])) {
-      header("Location: index.php");
-      exit;
-    }
-
-    $user_id = (int)$_SESSION['user_id'];
-    $project_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-    $sql_proj = "SELECT * FROM projects WHERE id = $project_id";
-    $proj_result = mysqli_query($connection, $sql_proj);
-    $project = mysqli_fetch_assoc($proj_result);
-    if (!$project) die("Проект не найден");
-
-    $sql_check_access = "
-      SELECT 1
-      FROM project_teams pt
-      INNER JOIN team_members tm ON tm.team_id = pt.team_id
-      WHERE pt.project_id = $project_id AND tm.user_id = $user_id
-      UNION
-      SELECT 1
-      FROM projects
-      WHERE id = $project_id AND owner_id = $user_id
-    ";
-
-    $access_result = mysqli_query($connection, $sql_check_access);
-    if (mysqli_num_rows($access_result) == 0) die("Нет доступа к проекту");
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-      if ($_POST['action'] === 'create_task') {
-        $title = mysqli_real_escape_string($connection, $_POST['title']);
-        $description = mysqli_real_escape_string($connection, $_POST['description']);
-          $sql_insert = "INSERT INTO tasks (title, description, status, author_id, project_id, created_at)
-                        VALUES ('$title', '$description', 'newtask', $user_id, $project_id, NOW())";
-        mysqli_query($connection, $sql_insert) or die(mysqli_error($connection));
-        header("Location: proj.php?id=$project_id"); exit();
-      }
-
-      if ($_POST['action'] === 'take_task') {
-        $task_id = (int)$_POST['task_id'];
-        $sql_update = "UPDATE tasks SET status = 'taskpr', executor_id = $user_id WHERE id = $task_id";
-        mysqli_query($connection, $sql_update) or die(mysqli_error($connection));
-        header("Location: proj.php?id=$project_id"); exit();
-      }
-
-      if ($_POST['action'] === 'complete_task') {
-        $task_id = (int)$_POST['task_id'];
-        $check = mysqli_query($connection, "SELECT executor_id FROM tasks WHERE id = $task_id");
-        $t = mysqli_fetch_assoc($check);
-        if ($t['executor_id'] != $user_id) die("Вы не исполнитель");
-        $sql_update = "UPDATE tasks SET status = 'taskend', completed_at = NOW() WHERE id = $task_id";
-        mysqli_query($connection, $sql_update) or die(mysqli_error($connection));
-        header("Location: proj.php?id=$project_id"); exit();
-      }
-
-      if ($_POST['action'] === 'add_comment') {
-        $task_id = $_POST['task_id'];
-        $user_id = $_SESSION['user_id'];
-        $comment = $_POST['comment'];
-
-        $stateCom = $connection->prepare("INSERT INTO task_comments (task_id, user_id, comment) VALUES (?, ?, ?)");
-        $stateCom->bind_param("iis", $task_id, $user_id, $comment);
-        $stateCom->execute();
-        $stateCom->close();
-        header("Location: proj.php?id=$project_id"); 
-        exit();
-      }
-    }
-
-    $task_result = mysqli_query($connection, "
-        SELECT t.id, t.title, t.description, t.status, t.created_at, t.completed_at,
-            CONCAT(a.first_name, ' ', a.last_name) AS author_name,
-            CONCAT(e.first_name, ' ', e.last_name) AS executor_name,
-            t.executor_id
-        FROM tasks t
-        INNER JOIN users a ON t.author_id = a.id
-        LEFT JOIN users e ON t.executor_id = e.id
-        WHERE t.project_id = $project_id
-        ORDER BY t.created_at DESC
-    ");
-
-  ?>
 
   <?php include('header.php') ?>
  
@@ -275,7 +262,11 @@
     </div>
   </main>
 
-  <!-- написать переадресацию на задачу, в которой был написан комментарий -->
+  <!-- 
+  написать переадресацию на задачу, в которой был написан комментарий 
+  cделать выведенный коммент красивее
+  сделать редактор текста, добавление картинок 
+  -->
 
   <script>
   function takeTask(taskId) {

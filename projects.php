@@ -1,4 +1,73 @@
-<?php session_start(); ?>
+<?php 
+  session_start(); 
+  include './connection.php';
+
+  if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit;
+  }
+  $currentUserId = $_SESSION['user_id'];
+  $sql = "
+    SELECT DISTINCT p.*
+    FROM projects p
+    JOIN project_teams pt ON p.id = pt.project_id
+    JOIN team_members tm ON tm.team_id = pt.team_id
+    WHERE tm.user_id = ?
+    ";
+  $state = $connection->prepare($sql);
+  $state->bind_param("i", $currentUserId);
+  $state->execute();
+  $projects = $state->get_result()->fetch_all(MYSQLI_ASSOC);
+  $userTeams = $connection->query("
+    SELECT t.id, t.name
+    FROM teams t
+    JOIN team_members tm ON t.id = tm.team_id
+    WHERE tm.user_id = $currentUserId
+    ")->fetch_all(MYSQLI_ASSOC);
+  $cat_result = $connection->query("SELECT DISTINCT category FROM projects WHERE category IS NOT NULL AND category != ''");
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_project'])) {
+    $name = trim($_POST['name']);
+    $desc = trim($_POST['description']);
+    $cat = trim($_POST['category']);
+    $user_id = $_SESSION['user_id'];
+    if ($name !== '') {
+      $state = $connection->prepare("INSERT INTO projects (name, description, category, owner_id) VALUES (?, ?, ?, ?)");
+      $state->bind_param("sssi", $name, $desc, $cat, $user_id);
+      $state->execute();
+      $project_id = $connection->insert_id;
+      if (!empty($_POST['teams'])) {
+        $teamState = $connection->prepare("INSERT INTO project_teams (project_id, team_id) VALUES (?, ?)");
+        foreach ($_POST['teams'] as $teamId) {
+          $teamState->bind_param("ii", $project_id, $teamId);
+          $teamState->execute();
+        }
+          header("Location: projects.php");
+      }
+        // else {
+        //   // Создаем команду по умолчанию для этого проекта
+        //   $code = strtoupper(bin2hex(random_bytes(4)));
+        //   $defaultTeamName = "Команда проекта '" . $name . "'";
+        //   $teamState = $conn->prepare("INSERT INTO teams (name, access_code) VALUES (?, ?)");
+        //   $teamState->bind_param("si", $defaultTeamName, $code);
+        //   $teamState->execute();
+        //   $defaultTeamId = $conn->insert_id;
+          
+        //   // Добавляем владельца в команду
+        //   $memberState = $conn->prepare("INSERT INTO team_members (team_id, user_id, role) VALUES (?, ?, 'owner')");
+        //   $memberState->bind_param("ii", $defaultTeamId, $user_id);
+        //   $memberState->execute();
+          
+        //   // Связываем проект с командой по умолчанию
+        //   $projectTeamState = $conn->prepare("INSERT INTO project_teams (project_id, team_id) VALUES (?, ?)");
+        //   $projectTeamState->bind_param("ii", $project_id, $defaultTeamId);
+        //   $projectTeamState->execute();
+        //   header("Location: projects.php");
+        // }
+    } else {
+      $message = "Введите название проекта";
+    }
+  }
+?>
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
   <head>
@@ -13,84 +82,6 @@
     <link rel="stylesheet" href="style.css">
     <title>teaman</title>
   </head>
-
-  <?php
-    $conn = mysqli_connect("localhost", "root", "", "teaman")
-        or die("Ошибка подключения: " . mysqli_error($conn));
-
-      if (!isset($_SESSION['user_id'])) {
-        header("Location: index.php");
-        exit;
-      }
-      $currentUserId = $_SESSION['user_id'];
-
-      $sql = "
-        SELECT DISTINCT p.*
-        FROM projects p
-        JOIN project_teams pt ON p.id = pt.project_id
-        JOIN team_members tm ON tm.team_id = pt.team_id
-        WHERE tm.user_id = ?
-        ";
-        $state = $conn->prepare($sql);
-        $state->bind_param("i", $currentUserId);
-        $state->execute();
-        $projects = $state->get_result()->fetch_all(MYSQLI_ASSOC);
-
-        $userTeams = $conn->query("
-          SELECT t.id, t.name
-          FROM teams t
-          JOIN team_members tm ON t.id = tm.team_id
-          WHERE tm.user_id = $currentUserId
-        ")->fetch_all(MYSQLI_ASSOC);
-
-      $cat_result = $conn->query("SELECT DISTINCT category FROM projects WHERE category IS NOT NULL AND category != ''");
-
-      if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_project'])) {
-      $name = trim($_POST['name']);
-      $desc = trim($_POST['description']);
-      $cat = trim($_POST['category']);
-      $user_id = $_SESSION['user_id'];
-
-      if ($name !== '') {
-          $state = $conn->prepare("INSERT INTO projects (name, description, category, owner_id) VALUES (?, ?, ?, ?)");
-          $state->bind_param("sssi", $name, $desc, $cat, $user_id);
-          $state->execute();
-          $project_id = $conn->insert_id;
-
-          if (!empty($_POST['teams'])) {
-            $teamState = $conn->prepare("INSERT INTO project_teams (project_id, team_id) VALUES (?, ?)");
-            foreach ($_POST['teams'] as $teamId) {
-              $teamState->bind_param("ii", $project_id, $teamId);
-              $teamState->execute();
-            }
-            header("Location: projects.php");
-          }
-          // else {
-          //   // Создаем команду по умолчанию для этого проекта
-          //   $code = strtoupper(bin2hex(random_bytes(4)));
-          //   $defaultTeamName = "Команда проекта '" . $name . "'";
-          //   $teamState = $conn->prepare("INSERT INTO teams (name, access_code) VALUES (?, ?)");
-          //   $teamState->bind_param("si", $defaultTeamName, $code);
-          //   $teamState->execute();
-          //   $defaultTeamId = $conn->insert_id;
-            
-          //   // Добавляем владельца в команду
-          //   $memberState = $conn->prepare("INSERT INTO team_members (team_id, user_id, role) VALUES (?, ?, 'owner')");
-          //   $memberState->bind_param("ii", $defaultTeamId, $user_id);
-          //   $memberState->execute();
-            
-          //   // Связываем проект с командой по умолчанию
-          //   $projectTeamState = $conn->prepare("INSERT INTO project_teams (project_id, team_id) VALUES (?, ?)");
-          //   $projectTeamState->bind_param("ii", $project_id, $defaultTeamId);
-          //   $projectTeamState->execute();
-
-          //   header("Location: projects.php");
-          // }
-      } else {
-        $message = "Введите название проекта";
-      }
-    }
-  ?>
 
   <?php include('header.php') ?>
 
@@ -158,8 +149,10 @@
                   <div class="mb-3">
                     <label class="form-label">Добавить команды</label>
                     <?php foreach($userTeams as $team): ?>
-                      <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="teams[]" value="<?= $team['id'] ?>" id="team<?= $team['id'] ?>">
+                      <div class="form-check">                     
+                        <input type="checkbox" class="form-check-input" name="teams[]" value="<?= $team['id'] ?>" id="team<?= $team['id'] 
+                        //поставить уведомление, что команда обязательна
+                        ?>" required>
                         <label class="form-check-label" for="team<?= $team['id'] ?>">
                           <?= htmlspecialchars($team['name']) ?>
                         </label>

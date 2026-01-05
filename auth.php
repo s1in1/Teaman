@@ -1,8 +1,9 @@
 <?php
 session_start();
-$connection = mysqli_connect("localhost", "root", "", "teaman")
-    or die("Ошибка подключения: " . mysqli_error($connection));
-
+include("./connection.php");
+//протестировать работу всех страниц 
+//переделать хедер
+//красивые уведомления  
 if (isset($_POST['register'])) {
     $first_name = mysqli_real_escape_string($connection, $_POST['first_name']);
     $last_name = mysqli_real_escape_string($connection, $_POST['last_name']);
@@ -37,12 +38,17 @@ if (isset($_POST['login'])) {
         $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['access_level'] = $user['access_level'];
-        $_SESSION['team_id'] = $user['team_id'];
-
+  
         header("Location: index.php");
         exit();
     } else {
-        $_SESSION['auth_error'] = "Неверный логин или пароль";
+        $_SESSION['auth_error'] = '
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+                Неверный логин или пароль
+            </div>
+        </div>';
         header('Location: index.php');
         exit();
     }

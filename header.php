@@ -16,7 +16,7 @@
 
       <?php } else { 
 
-        $connection = mysqli_connect("localhost", "root", "", "teaman");
+        include './connection.php';
         $user_id = (int)$_SESSION['user_id'];
         $res = mysqli_query($connection, "
           SELECT u.*, t.name AS team_name
@@ -51,7 +51,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="profile.php" data-bs-toggle="modal" data-bs-target="#profileModal" style="color: #4d4d4d;">
+              <a href="profile.php" data-bs-toggle="modal" data-bs-target="#profileModal" style="color: #c1c1c1;">
                 <?= htmlspecialchars($_SESSION['user_email']); ?>
               </a>
             </li>

@@ -19,17 +19,25 @@ input[type=checkbox]:checked{
 
 .nav-link {
   color: #c1c1c1;
+  
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .nav-link.active {
   background-color: #86C232 !important;
-  color: #F4F4F4;
+  color: #1c1c1c !important;
   font-weight: 600;
 }
 
 .nav-link:hover, .nav-link:focus {
   color: #F4F4F4;
   font-weight: 500;
+}
+
+.nav-item, .nav-item {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .nav-item:focus, .nav-item:hover {
@@ -39,10 +47,12 @@ input[type=checkbox]:checked{
 .btn-outline-primary {
   color: #86C232;
   border: none;
+    
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .btn-outline-primary:hover {
-  transition: all 0.3s ease-in-out;
   color: #F4F4F4;
 
   border: none;
@@ -50,16 +60,26 @@ input[type=checkbox]:checked{
 }
 
 .btn-primary {
-  color: #F4F4F4;
-
   border: none;
   background-color: #86C232;
+  
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .btn-primary:hover, .btn-primary:focus-visible {
-  color: #F4F4F4;
   border: none;
-  background-color: #61892F !important;
+  background-color: #61892F;
+}
+
+.btn-outline-secondary {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+}
+
+.btn-danger, .btn-danger {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 /* modal */
@@ -80,6 +100,9 @@ input[type=checkbox]:checked{
   border-color: #F4F4F4;
   box-shadow: none;
   outline: 0;
+
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .form-control::placeholder {
@@ -118,8 +141,4 @@ input[type=checkbox]:checked{
   color: #F4F4F4;
 }
 
-/* footer */
-
-.footer-links-mail:hover .footer-links-mail:focus {
-  color: #F4F4F4 !important;
-}
+/* footer */  

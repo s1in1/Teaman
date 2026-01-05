@@ -21,7 +21,7 @@
     <div class="container">
 
       <div class="container d-flex py-5 px-3 text-center justify-content-center align-items-center mx-auto flex-column w-50 mb-5">
-        <h1 class="display-5 fw-bold mb-3">Управление проектами в Teaman.</h1>
+        <h1 class="display-5 fw-semibold mb-3">Управление проектами в Teaman</h1>
           <p class="mb-4 fs-4">Планируйте, отслеживайте и управляйте задачами с помощью современных инструментов</p>
           <div class="d-flex gap-2">
             <button type="button" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4 fw-medium" data-bs-toggle="modal" data-bs-target="#registerModal">Начать сейчас</button>
@@ -54,6 +54,6 @@
 
     <?php include('footer.php') ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </body>
 </html>

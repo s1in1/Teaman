@@ -8,13 +8,13 @@
                 <a href="#"><img src="/img/Logo2.svg" alt="logo"></a>
               </div>
                       
-              <div class="ms-3">
+              <div class="ms-3"> 
                 <a href="https://t.me/Dartder" target="_blank" aria-label="Написать в телеграм">
-                  <i class="bi bi-telegram nav-link" style="font-size: 1.5rem"></i>
+                  <i class="bi bi-telegram" style="font-size: 1.5rem; color: #f4f4f4;"></i>
                 </a>
               </div>
                       
-              <div class="align-items-center justify-content-center ms-3 rounded-circle d-flex align-items-center justify-content-center footer-links-mail" style="width: 1.5rem; height: 1.5rem; background-color: #c1c1c1" aria-label="Отправить письмо на электронную почту"">
+              <div class="align-items-center justify-content-center ms-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 1.5rem; height: 1.5rem; background-color: #f4f4f4" aria-label="Отправить письмо на электронную почту">
                 <a href="mailto:mirgalimovk06@gmail.com" target="_blank" >
                   <i class="bi bi-envelope-fill" style="font-size: 1rem; color: #1c1c1c"></i>
                 </a>
