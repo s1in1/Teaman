@@ -13,7 +13,10 @@
         <p><strong>Имя:</strong> <?php echo $user['first_name']; ?></p>
         <p><strong>Фамилия:</strong> <?php echo $user['last_name']; ?></p>
         <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
-        <p><strong>Команды:</strong> <?php echo $user['team_name'] ?: 'Не назначена'; ?></p>
+        <p><strong>Команды:</strong> <?php 
+  
+        ?>
+        </p>
         <a href="auth.php?logout=1" class="btn btn-danger w-100 rounded-4 fw-medium">Выйти</a>
       </div>
 

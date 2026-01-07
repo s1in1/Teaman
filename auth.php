@@ -21,7 +21,6 @@ if (isset($_POST['register'])) {
             VALUES ('$first_name', '$last_name', '$email', '$password', 'user')";
     mysqli_query($connection, $sql) or die("Ошибка регистрации: " . mysqli_error($connection));
 
-    $_SESSION['auth_success'] = "Регистрация успешна. Войдите в систему."; 
     header("Location: index.php?modal=success");
     exit();
 }
@@ -31,27 +30,29 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     $res = mysqli_query($connection, "SELECT * FROM users WHERE email='$email'");
-    $user = mysqli_fetch_assoc($res);
 
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['access_level'] = $user['access_level'];
-  
+    if (mysqli_num_rows($res) > 0) {
+        $user = mysqli_fetch_assoc($res);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['access_level'] = $user['access_level'];
+        
+            header("Location: teams.php");
+            exit();
+        } else {
+            $_SESSION['auth_error'] = 'Неверный логин или пароль';
+            header('Location: index.php');
+            exit();
+        }
+    } else {
+        $_SESSION['auth_error'] = "Пользователя с таким email не существует";
         header("Location: index.php");
         exit();
-    } else {
-        $_SESSION['auth_error'] = '
-        <div class="alert alert-danger d-flex align-items-center" role="alert">
-            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-            <div>
-                Неверный логин или пароль
-            </div>
-        </div>';
-        header('Location: index.php');
-        exit();
     }
+
 }
 
 if (isset($_GET['logout'])) {

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="style.css">
     <title>teaman</title>
   </head>
-  <body style="background: linear-gradient(180deg, #1c1c1c 100%, #272727ff 0%, #1c1c1c 100%);">
+  <body>
 
     <!-- HEADER -->
     <?php include('header.php') ?>

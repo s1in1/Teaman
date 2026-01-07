@@ -18,7 +18,7 @@
     if ($code === '') {
       $message = "Введите код команды";
     } else {
-      $state = $conn->prepare("
+      $state = $connection->prepare("
         SELECT t.id, t.name,
         EXISTS(SELECT 1 FROM team_members WHERE team_id = t.id AND user_id = ?) AS is_member
         FROM teams t
@@ -30,7 +30,7 @@
         if ($row['is_member']) {
           $message = "Вы уже состоите в команде «" . htmlspecialchars($row['name']) . "»";
         } else {
-          $insert = $conn->prepare("INSERT INTO team_members (team_id, user_id) VALUES (?, ?)");
+          $insert = $connection->prepare("INSERT INTO team_members (team_id, user_id) VALUES (?, ?)");
           $insert->bind_param("ii", $row['id'], $currentUserId);
           $insert->execute();
           $message = "Вы успешно вступили в команду «" . htmlspecialchars($row['name']) . "»";
@@ -131,54 +131,61 @@
                     break;
                   }
               }
-              ?>
+            ?>
 
-              <div class="col">
-                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#membersModal<?= $t['id'] ?>">
-                  <div class="card shadow-sm card_team_back">
-                    <div class="card-body d-flex gap-3">
-                      <h5 class="card-title card-team"><?= htmlspecialchars($t['name']) ?></h5>
-                    </div>
+            <div class="col team-card">
+              <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#membersModal<?= $t['id'] ?>">
+                <div class="card shadow-sm card_team_back">
+                  <div class="card-body d-flex gap-3">
+                    <h5 class="card-title card-team"><?= htmlspecialchars($t['name']) ?></h5>
                   </div>
-                </a>
-              </div>
+                </div>
+              </a>
+            </div>  
 
+            <!-- Модальное окно команды -->
             <div class="modal fade" id="membersModal<?= $t['id'] ?>" tabindex="-1" aria-labelledby="membersModalLabel<?= $t['id'] ?>" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="membersModalLabel<?= $t['id'] ?>">Участники команды "<?= ($t['name']) ?>"</h5>
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-5 p-4 text-start">
+
+                  <!-- Заголовок -->
+                  <div class="modal-header border-0">
+                    <h5 class="modal-title me-3" id="membersModalLabel<?= $t['id'] ?>">Участники команды "<?= ($t['name']) ?>"</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                   </div>
-                  <div class="modal-body">
+
+                  <!-- Тело  -->
+                  <div class="modal-body d-flex row justify-content-between">
+
                     <ul class="list-group">
                       <?php foreach ($members as $m): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center ">
                           <?= htmlspecialchars($m['first_name'] . ' ' . $m['last_name']) ?>
                           <?php
                             if ($m['role'] === 'owner') {
-                                echo '<span class="badge" style="background-color: #86C232">Владелец</span>';
+                              echo '<span class="badge rounded-pill p-2">Владелец</span>';
                             }
                           ?>
-
                           <?php if ($currentUserRole === 'owner' && $m['role'] !== 'owner') { ?>
                           <form method="POST" class="d-inline" onsubmit="return confirm('Удалить - <?= ($m['first_name']) ?> из команды?');">
                             <input type="hidden" name="team_id" value="<?= $t['id'] ?>">
                             <input type="hidden" name="user_id" value="<?= $m['id'] ?>">
-                            <button type="submit" name="remove_member" class="btn btn-sm btn-outline-danger" title="Удалить из команды">Удалить</button>
+                            <button type="submit" name="remove_member" class="btn btn-sm btn-danger rounded-pill" title="Удалить из команды">Удалить</button>
                           </form>
                           <?php } ?>
                         </li>
-                        <?php endforeach; ?>
-                      </ul>
+                      <?php endforeach; ?>
+                    </ul>
                     <?php if ($currentUserIsMember): ?>
-                        <p class="mt-3"><strong>Код команды:</strong> <?= htmlspecialchars($t['access_code']) ?></p>
+                      <p class="mt-3"><strong>Код команды:</strong> <?= htmlspecialchars($t['access_code']) ?></p>
                     <?php endif; ?>
+
                   </div>
 
                 </div>
               </div>
             </div>
+
           <?php endforeach; ?>
         </div>
       <?php else: ?>

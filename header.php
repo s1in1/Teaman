@@ -6,10 +6,16 @@
     </a>
        
     <div class="d-flex align-items-center gap-3">
-        
+
       <?php
-        if (!isset($_SESSION['user_id'])) { 
+      if (!isset($_SESSION['user_id'])) { 
       ?>
+
+        <?php if (isset($_SESSION['auth_error'])) { 
+          $error_js = htmlspecialchars($_SESSION['auth_error'], ENT_QUOTES);
+          echo "<script>alert('$error_js');</script>";
+          unset($_SESSION['auth_error']); 
+        }?>
 
         <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Проекты</a>
         <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Команды</a>
@@ -36,7 +42,7 @@
 
         if ($modal_target): ?>
 
-          <button type="button" href="#" class="btn btn-primary btn-mg px-4 me-md-2 rounded-3" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button>
+          <button type="button" href="#" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button>
             
         <?php endif; ?>
 
@@ -60,17 +66,7 @@
 
       <?php } ?>  
 
-        <div class="d-flex align-items-center">
-          <?php if (isset($_SESSION['auth_error'])) { ?>
-            <p class="text-danger"><?php echo $_SESSION['auth_error']; unset($_SESSION['auth_error']); ?></p>
-          <?php } ?>
-
-          <?php if (isset($_SESSION['auth_error'])) { ?>
-            <p class="text-danger"><?php echo $_SESSION['auth_error']; unset($_SESSION['auth_error']); ?></p>
-          <?php } ?>
-        </div>
-
-      </div> 
+    </div> 
 
     <!-- Модальное окно регистрации-->
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">

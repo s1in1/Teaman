@@ -151,7 +151,6 @@
                     <?php foreach($userTeams as $team): ?>
                       <div class="form-check">                     
                         <input type="checkbox" class="form-check-input" name="teams[]" value="<?= $team['id'] ?>" id="team<?= $team['id'] 
-                        //поставить уведомление, что команда обязательна
                         ?>" required>
                         <label class="form-check-label" for="team<?= $team['id'] ?>">
                           <?= htmlspecialchars($team['name']) ?>
@@ -195,30 +194,30 @@
     </div>
 
   </main>
-
-<script>
-  const filterButtons = document.querySelectorAll('[data-filter]');
-  const productCards = document.querySelectorAll('.product-card');
-
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-
-      const filterValue = button.getAttribute('data-filter');
-
-      productCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        if (filterValue === 'all' || category === filterValue) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+            
+    <script>
+      const filterButtons = document.querySelectorAll('[data-filter]');
+      const productCards = document.querySelectorAll('.product-card');
+            
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+        
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+        
+          const filterValue = button.getAttribute('data-filter');
+        
+          productCards.forEach(card => {
+            const category = card.getAttribute('data-category');
+            if (filterValue === 'all' || category === filterValue) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
       });
-    });
-  });
-</script>
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </body>
 </html>

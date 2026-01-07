@@ -2,6 +2,14 @@
   session_start(); 
   include "./connection.php";
 
+  require_once 'vendor/autoload.php';
+
+  function purify_html($html) {
+    $config = HTMLPurifier_Config::createDefault();
+    $purifier = new HTMLPurifier($config);
+    return $purifier->purify($html);
+  }
+
   if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
@@ -31,13 +39,15 @@
       $sql_insert = "INSERT INTO tasks (title, description, status, author_id, project_id, created_at)
                     VALUES ('$title', '$description', 'newtask', $user_id, $project_id, NOW())";
       mysqli_query($connection, $sql_insert) or die(mysqli_error($connection));
-      header("Location: proj.php?id=$project_id"); exit();
+      header("Location: proj.php?id=$project_id"); 
+      exit();
     }
     if ($_POST['action'] === 'take_task') {
       $task_id = (int)$_POST['task_id'];
       $sql_update = "UPDATE tasks SET status = 'taskpr', executor_id = $user_id WHERE id = $task_id";
       mysqli_query($connection, $sql_update) or die(mysqli_error($connection));
-      header("Location: proj.php?id=$project_id"); exit();
+      header("Location: proj.php?id=$project_id"); 
+      exit();
     }
     if ($_POST['action'] === 'complete_task') {
       $task_id = (int)$_POST['task_id'];
@@ -46,16 +56,6 @@
       if ($t['executor_id'] != $user_id) die("Вы не исполнитель");
       $sql_update = "UPDATE tasks SET status = 'taskend', completed_at = NOW() WHERE id = $task_id";
       mysqli_query($connection, $sql_update) or die(mysqli_error($connection));
-      header("Location: proj.php?id=$project_id"); exit();
-    }
-    if ($_POST['action'] === 'add_comment') {
-      $task_id = $_POST['task_id'];
-      $user_id = $_SESSION['user_id'];
-      $comment = $_POST['comment'];
-      $stateCom = $connection->prepare("INSERT INTO task_comments (task_id, user_id, comment) VALUES (?, ?, ?)");
-      $stateCom->bind_param("iis", $task_id, $user_id, $comment);
-      $stateCom->execute();
-      $stateCom->close();
       header("Location: proj.php?id=$project_id"); 
       exit();
     }
@@ -80,6 +80,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -91,7 +92,7 @@
   <?php include('header.php') ?>
  
   <main class="d-flex flex-nowrap">
-    <div class="container d-md-flex flex-md-equal w-100 my-md-3 ps-md-0">
+    <div class="container-fluid d-md-flex flex-md-equal w-100 my-md-3 ps-md-0">
       <div class="d-flex flex-column flex-shrink-0 p-3">
 
         <h3>Проект: <?php echo $project['name'] ?></h3>
@@ -194,8 +195,12 @@
                   </div>
                   <div class="d-flex justify-content-between">
                     <p class="card-text card-proj-p">Исполнитель: <?php echo $task['executor_name'] ?: 'Нет'; ?></p>
-                    <p class="card-text card-proj-p">Дата исполнения: <?php echo $task['completed_at'] ?: '—'; ?></p>
-                  </div>
+                    <?php
+                      if (isset($task['completed_at'])) {
+                        echo '<p class="card-text card-proj-p">Дата исполнения: '. $task['completed_at']. '</p>';
+                      }
+                    ?>
+                    </div>
               </div></a>
             </div>
           </div>
@@ -210,10 +215,10 @@
                   <h3 class="modal-title me-3" id="createTaskModalLabel"><?=($task['title']);?></h3>
                   <div class="w-50 text-start">
                     <?php if ($task['status'] == 'newtask') { ?>
-                      <button type="submit" name="action" value="take_task" class="btn btn-primary" onclick="takeTask(<?php echo $task['id']; ?>)">Взять в работу</button>
+                      <button type="submit" name="action" value="take_task" class="btn btn-primary rounded-4" onclick="takeTask(<?php echo $task['id']; ?>)">Взять в работу</button>
                     <?php } ?>
                     <?php if ($task['status'] == 'taskpr' && $task['executor_id'] == $_SESSION['user_id']) { ?>
-                      <button type="submit" name="action" value="complete_task" class="btn btn-primary" onclick="completeTask(<?php echo $task['id']; ?>)">Исполнить</button>
+                      <button type="submit" name="action" value="complete_task" class="btn btn-primary rounded-4" onclick="completeTask(<?php echo $task['id']; ?>)">Исполнить</button>
                     <?php } ?>
                   </div>
                   <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
@@ -231,27 +236,37 @@
                   </div>
 
                   <div class="w-100">
-                    <form method="POST" class="d-flex gap-1 align-items-center">
-                      <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
-                      <div class="input-group">
-                        <textarea name="comment" aria-label="With textarea" class="form-control" placeholder="Введите комментарий" required></textarea>
-                        <button type="submit" name="action" value="add_comment" class="btn btn-outline-secondary">Отправить</button>
+                    <form method="POST" class="comment-form d-flex flex-column gap-2" data-task-id="<?php echo $task['id']; ?>">
+                      <!-- Скрытое поле для HTML -->
+                      <input type="hidden" name="comment" class="comment-hidden" id="commentHidden<?php echo $task['id']; ?>">
+                      
+                      <!-- Контейнер для Quill (создастся динамически) -->
+                      <div class="quill-container" style="height: 100px;"></div>
+                      
+                      <!-- Старый textarea (оставляем для совместимости) -->
+                      <textarea name="comment" class="form-control comment-text" placeholder="Введите комментарий" style="display: none;"></textarea>
+                      
+                      <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                          Отправить комментарий
+                        </button>
                       </div>
                     </form>
                   </div>
 
-                    <div class="comments w-100 mt-3">
-                      <?php if (!empty($task_comments)): ?>
-                        <?php foreach($task_comments as $comment): ?>
-                          <div class="comment-item border-bottom pb-2 mb-2">
-                            <p class="mb-1"><strong><?= htmlspecialchars($comment['first_name']) ?> <?= htmlspecialchars($comment['last_name']) ?></strong>: <?= htmlspecialchars($comment['comment']) ?></p>
-                            <small class="text-muted"><em><?= $comment['created_at'] ?></em></small>
-                          </div>
-                        <?php endforeach; ?>
-                      <?php else: ?>
-                        <p class="text-muted">Комментариев пока нет.</p>
-                      <?php endif; ?>
-                    </div>
+                  <div class="comments w-100 mt-3">
+                    <?php if (!empty($task_comments)): ?>
+                      <?php foreach($task_comments as $comment): ?>
+                        <div class="comment-item border-bottom pb-2 mb-1">
+                          <p class="mb-1"><strong><?= htmlspecialchars($comment['first_name']) ?> <?= htmlspecialchars($comment['last_name']) ?></strong>:</p>
+                          <div class="comment-content"><?= $comment['comment'] ?></div>
+                          <small class="text-muted"><em><?= $comment['created_at'] ?></em></small>  
+                        </div>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <p class="text-muted">Комментариев пока нет.</p>
+                    <?php endif; ?>
+                  </div>
 
                 </div>
               </div>
@@ -261,66 +276,238 @@
 
     </div>
   </main>
-
-  <!-- 
-  написать переадресацию на задачу, в которой был написан комментарий 
-  cделать выведенный коммент красивее
-  сделать редактор текста, добавление картинок 
-  -->
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>  
   <script>
-  function takeTask(taskId) {
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '';
+  // Проверка загрузки Quill
+  if (typeof Quill === 'undefined') {
+    console.error('Quill.js не загружен!');
+    
+    // Fallback: показываем обычные textarea
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.comment-text').forEach(textarea => {
+        textarea.style.display = 'block';
+      });
+    });
+  }  
 
-      const actionInput = document.createElement('input');
-      actionInput.type = 'hidden';
-      actionInput.name = 'action';
-      actionInput.value = 'take_task';
+  // Глобальное хранилище для редакторов
+  const commentEditors = {};
 
-      const taskInput = document.createElement('input');
-      taskInput.type = 'hidden';
-      taskInput.name = 'task_id';
-      taskInput.value = taskId;
-
-      form.appendChild(actionInput);
-      form.appendChild(taskInput);
-      document.body.appendChild(form);
-      form.submit();
+  // Функция инициализации редактора для конкретной задачи
+  function initCommentEditorForTask(taskId) {
+    const editorId = `commentEditor${taskId}`;
+    const form = document.querySelector(`.comment-form[data-task-id="${taskId}"]`);
+    
+    if (!form) return;
+    
+    // Проверяем, не инициализирован ли уже редактор
+    if (commentEditors[editorId]) {
+      return commentEditors[editorId];
     }
+    
+    // Находим или создаем контейнер для редактора
+    let editorContainer = document.getElementById(editorId);
+    let textarea = form.querySelector('textarea.comment-text');
+    
+    if (!editorContainer && textarea) {
+      // Создаем контейнер для Quill
+      editorContainer = document.createElement('div');
+      editorContainer.id = editorId;
+      editorContainer.style.height = '100px';
+      editorContainer.style.minHeight = '100px';
+      editorContainer.style.marginBottom = '10px';
+      
+      // Создаем скрытое поле
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'comment';
+      hiddenInput.id = `commentHidden${taskId}`;
+      hiddenInput.className = 'comment-hidden';
+      
+      // Заменяем textarea
+      textarea.parentNode.insertBefore(editorContainer, textarea);
+      textarea.parentNode.insertBefore(hiddenInput, editorContainer);
+      textarea.style.display = 'none';
+    }
+    
+    // Инициализируем Quill
+    if (editorContainer && !editorContainer.querySelector('.ql-toolbar')) {
+      try {
+        const quill = new Quill(`#${editorId}`, {
+          theme: 'snow',
+          modules: {
+            toolbar: [
+              ['bold', 'italic', 'underline'],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              ['link'],
+              ['clean']
+            ]
+          },
+          placeholder: 'Введите комментарий...'
+        });
+        
+        commentEditors[editorId] = quill;
+        return quill;
+      } catch (error) {
+        console.error('Ошибка инициализации Quill:', error);
+        return null;
+      }
+    }
+    
+    return commentEditors[editorId] || null;
+  }
+
+  // Функция для очистки редактора
+  function clearCommentEditor(taskId) {
+    const editorId = `commentEditor${taskId}`;
+    const editor = commentEditors[editorId];
+    if (editor) {
+      editor.root.innerHTML = '';
+    }
+  }
+
+  // Обработчик открытия модального окна
+  document.addEventListener('DOMContentLoaded', function() {
+    // Инициализируем обработчики для модальных окон
+    document.querySelectorAll('[id^="tasknum"]').forEach(modal => {
+      const modalId = modal.id.replace('tasknum', '');
+      
+      modal.addEventListener('shown.bs.modal', function() {
+        // Ждем пока модальное окно полностью откроется
+        setTimeout(() => {
+          initCommentEditorForTask(modalId);
+        }, 100);
+      });
+      
+      // Очищаем редактор при закрытии модального окна
+      modal.addEventListener('hidden.bs.modal', function() {
+        clearCommentEditor(modalId);
+      });
+    });
+    
+    // Обработчик отправки формы комментария
+    document.querySelectorAll('.comment-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const taskId = this.dataset.taskId;
+        const editor = initCommentEditorForTask(taskId);
+        
+        if (!editor) {
+          alert('Редактор не загружен. Попробуйте снова.');
+          return;
+        }
+        
+        const commentHtml = editor.root.innerHTML;
+        const cleanText = commentHtml.trim();
+        
+        if (!cleanText) {
+          alert('Комментарий не может быть пустым');
+          return;
+        }
+        
+        // Заполняем скрытое поле
+        const hiddenField = document.getElementById(`commentHidden${taskId}`);
+        if (hiddenField) {
+          hiddenField.value = commentHtml;
+        }
+        
+        const commentsContainer = this.closest('.modal-body').querySelector('.comments');
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Показываем индикатор загрузки
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span>';
+        submitBtn.disabled = true;
+        
+        // Отправляем AJAX запрос
+        fetch('add_comment.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            task_id: taskId,
+            comment: commentHtml,
+            action: 'add_comment'
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            editor.root.innerHTML = '';
+            updateComments(commentsContainer, taskId);
+          } else {
+            alert('Ошибка: ' + (data.message || 'Неизвестная ошибка'));
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Ошибка при отправке комментария');
+        })
+        .finally(() => {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        });
+      });
+    });
+  });
+
+  // Функция обновления комментариев
+  function updateComments(container, taskId) {
+    const originalContent = container.innerHTML;
+    container.innerHTML = '<div class="text-center py-2"><div class="spinner-border spinner-border-sm"></div></div>';
+    
+    fetch(`get_comments.php?task_id=${taskId}`)
+      .then(response => response.text())
+      .then(html => {
+        container.innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        container.innerHTML = originalContent;
+      });
+  }
+
+  // Функции для работы с задачами (оставляем как есть)
+  function takeTask(taskId) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '';
+    form.innerHTML = `
+      <input type="hidden" name="action" value="take_task">
+      <input type="hidden" name="task_id" value="${taskId}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+  }
 
   function completeTask(taskId) {
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '';
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '';
+    form.innerHTML = `
+      <input type="hidden" name="action" value="complete_task">
+      <input type="hidden" name="task_id" value="${taskId}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+  }
 
-      const actionInput = document.createElement('input');
-      actionInput.type = 'hidden';
-      actionInput.name = 'action';
-      actionInput.value = 'complete_task';
-
-      const taskInput = document.createElement('input');
-      taskInput.type = 'hidden';
-      taskInput.name = 'task_id';
-      taskInput.value = taskId;
-
-      form.appendChild(actionInput);
-      form.appendChild(taskInput);
-      document.body.appendChild(form);
-      form.submit();
-    }
-
+  // Код фильтрации задач
   const filterButtons = document.querySelectorAll('[data-filter]');
   const productCards = document.querySelectorAll('.product-card');
 
   filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      
       filterButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
-
+      
       const filterValue = button.getAttribute('data-filter');
-
+      
       productCards.forEach(card => {
         const category = card.getAttribute('data-category');
         if (filterValue === 'all' || category === filterValue) {
@@ -332,6 +519,5 @@
     });
   });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </body>
 </html>
