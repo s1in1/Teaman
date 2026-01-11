@@ -1,9 +1,7 @@
 <?php
 session_start();
 include("./connection.php");
-//протестировать работу всех страниц 
-//переделать хедер
-//красивые уведомления  
+
 if (isset($_POST['register'])) {
     $first_name = mysqli_real_escape_string($connection, $_POST['first_name']);
     $last_name = mysqli_real_escape_string($connection, $_POST['last_name']);

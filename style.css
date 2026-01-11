@@ -13,9 +13,43 @@ input[type=checkbox]:checked{
   background-color: #86C232 !important;
 }
 
-
 .text-muted {
   color: #c1c1c1 !important;
+}
+
+#navbar .nav-link {
+  font-weight: 600;
+  text-decoration: none;
+
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+}
+
+#navbar .nav-link:hover {
+  color: #F4F4F4;
+}
+
+#navbar .nav-link.active {
+  color: #F4F4F4;
+}
+
+#navbar .nav-link:after {
+  display: block;
+	position: relative;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background-color: #F4F4F4; 
+	content: "";
+	transition: width 0.2s ease-out; 
+}
+
+#navbar .nav-link:hover:after, .nav-link:focus:after {
+  width: 100%;
+}
+
+#navbar .nav-link.active:after {
+  width: 100%;
 }
 
 .nav-link {
@@ -25,17 +59,17 @@ input[type=checkbox]:checked{
   transition: 0.2s ease-in-out;
 }
 
-.nav-link.active {
+.nav-pills .nav-link.active {
   background-color: #86C232 !important;
   color: #1c1c1c !important;
   font-weight: 900;
 }
 
-.nav-link:hover, .nav-link:focus {
+.nav-pills .nav-link:hover, .nav-link:focus {
   color: #F4F4F4;
 }
 
-.nav-item, .nav-item {
+.nav-item {
   -webkit-transition: all 0.2s ease-in-out;
   transition: 0.2s ease-in-out;
 }
@@ -128,9 +162,9 @@ input[type=checkbox]:checked{
   cursor: pointer;
 } */
 
-.bi .bi-lock-fill {
+/* .bi .bi-lock-fill {
   color: #F4F4F4;
-}
+} */
 
 .badge {
   background-color: #86C232;
@@ -163,11 +197,80 @@ input[type=checkbox]:checked{
   border-width: 0.2em;
 }
 
-.product-card, .comment-item {
-  animation: fadeIn 0.3s ease-in; 
+.product-card, .comment-item, .team-card {
+  animation: fadeIn 0.2s ease-in; 
 }
 
 @keyframes fadeIn { 
   from { opacity: 0; transform: translateY(-10px); } 
   to { opacity: 1; transform: translateY(0); } 
+}
+
+/* Quill */
+/* .ql-file-upload {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 2px;
+}  */
+
+.ql-toolbar .ql-formats {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ql-formats button svg:hover {
+  color: #86C232;
+}
+
+.upload-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* footer */
+footer li i.bi-telegram {
+  font-size: 2rem;
+  color: #f4f4f4;
+
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+}
+
+footer li.footer-links-mail {
+  background-color: #f4f4f4;
+  width: 2rem;
+  height: 2rem;
+
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+}
+
+footer li.footer-links-mail i.bi-envelope-fill {
+  font-size: 1.5rem; 
+  color: #1c1c1c;
+}
+
+footer li i.bi-telegram:hover {
+  color: #4D4D4D;
+}
+
+footer li.footer-links-mail:hover {
+  background-color: #4D4D4D;
 }

@@ -128,4 +128,29 @@ if ($insert_stmt->execute()) {
 
 $insert_stmt->close();
 $connection->close();
+
+if ($insert_stmt->execute()) {
+    $new_comment_id = $insert_stmt->insert_id;
+    
+    // Обновляем прикрепленные файлы с ID комментария
+    if (isset($_POST['file_ids']) && !empty($_POST['file_ids'])) {
+        $file_ids = json_decode($_POST['file_ids'], true);
+        if (is_array($file_ids) && !empty($file_ids)) {
+            $file_ids_str = implode(',', array_map('intval', $file_ids));
+            $update_files = $connection->query(
+                "UPDATE uploaded_files SET comment_id = $new_comment_id 
+                 WHERE id IN ($file_ids_str) AND task_id = $task_id"
+            );
+            
+            // Обновляем комментарий, отмечаем что есть вложения
+            $connection->query(
+                "UPDATE task_comments SET has_attachments = TRUE 
+                 WHERE id = $new_comment_id"
+            );
+        }
+    }
+    
+    $response = ['success' => true, 'message' => 'Комментарий добавлен', 'comment_id' => $new_comment_id];
+    echo json_encode($response);
+}
 ?>

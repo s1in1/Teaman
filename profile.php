@@ -8,13 +8,13 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
       </div>
 
-      <!-- Тело окна -->
+      <!-- Тело окна -->  
       <div class="modal-body">
         <p><strong>Имя:</strong> <?php echo $user['first_name']; ?></p>
         <p><strong>Фамилия:</strong> <?php echo $user['last_name']; ?></p>
         <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
         <p><strong>Команды:</strong> <?php 
-  
+    
         ?>
         </p>
         <a href="auth.php?logout=1" class="btn btn-danger w-100 rounded-4 fw-medium">Выйти</a>

@@ -1,4 +1,6 @@
+.gitignore
 img/
 .vscode/
-.osp
+uploads/
+.osp/
 todo.txt

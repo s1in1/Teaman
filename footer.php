@@ -1,32 +1,18 @@
-<footer class="border-top border-secondary py-2 mt-5">
-  
-        <div class="container d-flex align-items-center justify-content-between">              
-          <div class="col-md-6 mb-3 mb-md-0 gap-2">
-            <div class="d-flex align-items-center gap-2">
-                  
-              <div class="footer-logo">
-                <a href="#"><img src="/img/Logo2.svg" alt="logo"></a>
-              </div>
-                      
-              <div class="ms-3"> 
-                <a href="https://t.me/Dartder" target="_blank" aria-label="Написать в телеграм">
-                  <i class="bi bi-telegram" style="font-size: 1.5rem; color: #f4f4f4;"></i>
-                </a>
-              </div>
-                      
-              <div class="align-items-center justify-content-center ms-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 1.5rem; height: 1.5rem; background-color: #f4f4f4" aria-label="Отправить письмо на электронную почту">
-                <a href="mailto:mirgalimovk06@gmail.com" target="_blank" >
-                  <i class="bi bi-envelope-fill" style="font-size: 1rem; color: #1c1c1c"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="d-flex align-items-center">
-              <a href="#" class="me-3 nav-link">Документация</a>
-              <a href="#" class="nav-link">Политика конфиденциальности</a>
-          </div>
-
-        </div>
-
-</footer>
+<footer class="border-top border-secondary py-2" style="background-color: #1c1c1c;"> 
+  <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <div class="pt-2 col-md-2 align-self-start d-flex align-items-center gap-lg-3 gap-2"> 
+      <a href="/" class="text-decoration-none" aria-label="logo"> 
+        <span><img src="/img/logo.svg" alt="logo"></span>   
+      </a> 
+      <span class="text-secondary">2025 Тимэн</span> 
+    </div> 
+    <ul class="col-md-2 align-self-end nav d-flex align-items-center justify-content-end gap-lg-3 gap-2"> 
+      <li>
+        <a href="https://t.me/Dartder" aria-label="telegram"><i class="bi bi-telegram"></i></a>
+      </li> 
+      <li class="footer-links-mail justify-content-around rounded-circle d-flex align-items-center justify-content-center">
+        <a href="mailto:mirgalimovk06@gmail.com" target="_blank" aria-label="email"><i class="bi bi-envelope-fill"></i></a> 
+      </li> 
+    </ul> 
+  </div>
+</footer> 

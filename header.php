@@ -1,55 +1,54 @@
-<header class="py-2 px-2 mb-4 border-bottom border-secondary">
-  <div class="container d-flex flex-wrap justify-content-between align-items-center">
-
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto">
-      <span class="fs-4"><img src="/img/Logo.svg" alt="teaman"></span>
-    </a>
-       
-    <div class="d-flex align-items-center gap-3">
-
-      <?php
-      if (!isset($_SESSION['user_id'])) { 
-      ?>
-
-        <?php if (isset($_SESSION['auth_error'])) { 
-          $error_js = htmlspecialchars($_SESSION['auth_error'], ENT_QUOTES);
-          echo "<script>alert('$error_js');</script>";
-          unset($_SESSION['auth_error']); 
-        }?>
-
-        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Проекты</a>
-        <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#registerModal">Команды</a>
-
-      <?php } else { 
-
-        include './connection.php';
-        $user_id = (int)$_SESSION['user_id'];
-        $res = mysqli_query($connection, "
-          SELECT u.*, t.name AS team_name
-          FROM users u
-          LEFT JOIN team_members tm ON u.id = tm.user_id
-          LEFT JOIN teams t ON tm.team_id = t.id
-          WHERE u.id = $user_id
-        ");
-        $user = mysqli_fetch_assoc($res);
-
-        $modal_target = '';
-        if (strpos($_SERVER['REQUEST_URI'], '/projects.php') === 0) {
-           $modal_target = '#createProject';
-        } elseif (strpos($_SERVER['REQUEST_URI'], '/proj.php') === 0) {
-          $modal_target = '#createTask';
-        }
-
-        if ($modal_target): ?>
-
-          <button type="button" href="#" class="btn btn-primary btn-mg px-4 me-md-2 rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button>
-            
-        <?php endif; ?>
-
-        <a href="projects.php" class="nav-link me-3">Проекты</a>
-        <a href="teams.php" class="nav-link me-3">Команды</a>
-
-        <div class="ms-auto">
+<?php 
+include('connection.php'); 
+if (!isset($_SESSION['user_id'])) { 
+  if (isset($_SESSION['auth_error'])) { 
+    $error_js = htmlspecialchars($_SESSION['auth_error'], ENT_QUOTES);
+    echo "<script>alert('$error_js');</script>";
+    unset($_SESSION['auth_error']); 
+  }
+} else {
+    $user_id = (int)$_SESSION['user_id'];
+    $res = mysqli_query($connection, "
+      SELECT u.*, t.name AS team_name
+      FROM users u
+      LEFT JOIN team_members tm ON u.id = tm.user_id
+      LEFT JOIN teams t ON tm.team_id = t.id
+      WHERE u.id = $user_id
+    ");
+    $user = mysqli_fetch_assoc($res);
+    $modal_target = '';
+    if (strpos($_SERVER['REQUEST_URI'], '/projects.php') === 0) {
+      $modal_target = '#createProject';
+    } elseif (strpos($_SERVER['REQUEST_URI'], '/proj.php') === 0) {
+      $modal_target = '#createTask';
+    }
+  }
+?>
+<header class="border-bottom border-secondary">
+  <nav class="navbar navbar-expand-lg" aria-label="navbar"> 
+    <div class="container"> 
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> 
+        <span class="navbar-toggler-icon"></span> 
+      </button> 
+      <div class="collapse navbar-collapse d-lg-flex" id="navbar"> 
+        <a class="navbar-brand col-3 me-0" href="#"><img src="/img/logo.svg" alt="Тимэн"></a> 
+        <ul class="navbar-nav col-6 justify-content-lg-center"> 
+          <li class="nav-item"> 
+            <a class="nav-link <?php if ($_SERVER['REQUEST_URI'] === '/') echo 'active'; ?> rounded-4" aria-current="page" href="/">Главная</a> 
+          </li> 
+          <li class="nav-item"> 
+            <a class="nav-link <?php if ($_SERVER['REQUEST_URI'] === '/projects.php') echo 'active'; ?> rounded-4" href="projects.php">Проекты</a> 
+          </li> 
+          <li class="nav-item"> 
+            <a class="nav-link <?php if ($_SERVER['REQUEST_URI'] === '/teams.php') echo 'active'; ?> rounded-4" href="teams.php">Команды</a> 
+          </li>
+          <?php if ($modal_target): ?>
+          <li class="nav-item"> 
+            <button type="button" href="#" class="btn btn-primary rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button> 
+          </li>
+          <?php endif; ?>
+        </ul>
+        <div class="d-lg-flex col-3 justify-content-lg-end"> 
           <ul class="nav row text-start flex-column pe-0 me-0">
             <li class="nav-item">
               <a href="#" data-bs-toggle="modal" data-bs-target="#profileModal" style="color: #f4f4f4;">
@@ -63,10 +62,11 @@
             </li>
           </ul>  
         </div> 
-
-      <?php } ?>  
-
+      </div> 
     </div> 
+  </nav>
+
+  <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center">
 
     <!-- Модальное окно регистрации-->
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
@@ -81,7 +81,7 @@
 
           <!-- Тело формы -->
           <div class="modal-body">
-            <form method="POST" action="auth.php">
+            <form method="POST" action="auth.php" autocomplete="on">
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="first_name" class="form-label">Имя</label>
