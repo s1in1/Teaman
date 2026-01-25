@@ -1,5 +1,3 @@
-public/.vscode/*
-public/uploads/*
-!public/*
-.osp/
+.vscode/
+uploads/*
 todo.txt
