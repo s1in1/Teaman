@@ -1,4 +1,5 @@
-public/.vscode/
-public/uploads/
+public/.vscode/*
+public/uploads/*
+!public/*
 .osp/
 todo.txt
