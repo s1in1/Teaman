@@ -97,7 +97,7 @@ if ($check->num_rows == 0) {
 }
 
 // Создаем директорию для загрузки
-$upload_dir = 'uploads/tasks/' . $task_id . '/';
+$upload_dir = 'img/tasks/' . $task_id . '/';
 if (!file_exists($upload_dir)) {
     if (!mkdir($upload_dir, 0755, true)) {
         echo json_encode(['success' => false, 'error' => 'Не удалось создать директорию для загрузки']);

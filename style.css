@@ -139,9 +139,8 @@ input[type=checkbox]:checked{
 }
 
 .form-control:focus {
-  border-color: #F4F4F4;
+  border: 2px solid #f4f4f4;
   box-shadow: none;
-  outline: 0;
 
   -webkit-transition: all 0.2s ease-in-out;
   transition: 0.2s ease-in-out;

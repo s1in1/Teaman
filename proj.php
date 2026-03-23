@@ -77,11 +77,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="img/logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
@@ -128,13 +128,11 @@
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content rounded-5 p-4 text-start">
 
-                <!-- Заголовок -->
                 <div class="modal-header border-0">
                   <h3 class="modal-title" id="createTaskModalLabel">Новая задача</h3>
                   <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                 </div>
 
-                <!-- Тело формы -->
                 <div class="modal-body">
                   <form method="POST">
                     <input type="hidden" name="action" value="create_task">
@@ -148,7 +146,6 @@
                       <textarea type="text" name="description" class="form-control" id="description" placeholder="Описание" style="color:#f4f4f4; background-color: #212121;" required></textarea>
                     </div>
 
-                    <!-- Кнопка -->
                     <div class="d-flex justify-content-between align-items-center w-100">
                       <button type="submit" name="createTask" class="btn btn-primary rounded-4 w-35">Создать задачу</button>
                     </div>
@@ -210,7 +207,6 @@
               <div class="modal-dialog modal-dialog-centered modal-xl">
                   <div class="modal-content rounded-5 p-4 text-start">
 
-                      <!-- Заголовок -->
                       <div class="modal-header border-0">
                           <h3 class="modal-title me-3" id="taskModalLabel<?php echo $task['id']; ?>"><?= htmlspecialchars($task['title']); ?></h3>
                           <div class="w-50 text-start">
@@ -224,9 +220,8 @@
                           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                       </div>
 
-                      <!-- Тело модального окна -->
                       <div class="modal-body">
-                        <!-- Информация о задаче -->
+
                         <div class="row mb-4">
                             <div class="col-md-8 mb-3">
                                 <h5>Описание:</h5>
@@ -269,14 +264,12 @@
                         </div>
                     </div>
 
-                        <!-- Форма комментария -->
                         <div class="mb-4">
                             <h5>Добавить комментарий</h5>
                             <form method="POST" class="comment-form" data-task-id="<?php echo $task['id']; ?>">
 
                                 <input type="hidden" name="comment" id="commentHidden<?php echo $task['id']; ?>" class="comment-hidden">
 
-                                <!-- Контейнер для Quill редактора -->
                                 <div id="commentEditor<?php echo $task['id']; ?>" style="height: 150px; margin-bottom: 10px;"></div>
 
                                 <textarea name="comment" class="form-control comment-text" placeholder="Введите комментарий" style="display: none;"></textarea>
@@ -286,7 +279,7 @@
                                 </div>
                             </form>
                         </div>
-                        <!-- Комментарии -->
+
                         <div class="comments-section">
                             <h5>Комментарии</h5>
                             <div class="comments" id="commentsContainer<?php echo $task['id']; ?>">

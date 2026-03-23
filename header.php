@@ -3,7 +3,21 @@ include('connection.php');
 if (!isset($_SESSION['user_id'])) { 
   if (isset($_SESSION['auth_error'])) { 
     $error_js = htmlspecialchars($_SESSION['auth_error'], ENT_QUOTES);
-    echo "<script>alert('$error_js');</script>";
+    echo '
+    <div class="modal d-block p-4 py-md-1" tabindex="-1" role="dialog" id="errorModal" aria-labelledby="errorModalLabel" aria-hidden="true"> 
+      <div class="modal-dialog"> 
+        <div class="modal-content rounded-4 shadow"> 
+          <div class="modal-header border-bottom-0"> 
+            <h1 class="modal-title fs-5">Ошибка</h1> 
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button> 
+          </div> 
+          <div class="modal-body py-0"> 
+            <p>'.$error_js.'</p> 
+          </div> 
+        </div> 
+      </div> 
+    </div>
+    ';
     unset($_SESSION['auth_error']); 
   }
 } else {
@@ -42,11 +56,13 @@ if (!isset($_SESSION['user_id'])) {
           <li class="nav-item"> 
             <a class="nav-link <?php if ($_SERVER['REQUEST_URI'] === '/teams.php') echo 'active'; ?> rounded-4" href="teams.php">Команды</a> 
           </li>
-          <?php if ($modal_target): ?>
-          <li class="nav-item"> 
-            <button type="button" href="#" class="btn btn-primary rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button> 
-          </li>
-          <?php endif; ?>
+          <?php
+        if (isset($_SESSION['user_id'])) {
+          if ($modal_target){ ?>
+            <li class="nav-item"> 
+              <button type="button" href="#" class="btn btn-primary rounded-4" data-bs-toggle="modal" data-bs-target="<?php echo $modal_target; ?>">Создать</button> 
+            </li>
+          <?php } ?>
         </ul>
         <div class="d-lg-flex col-3 justify-content-lg-end"> 
           <ul class="nav row text-start flex-column pe-0 me-0">
@@ -62,6 +78,7 @@ if (!isset($_SESSION['user_id'])) {
             </li>
           </ul>  
         </div> 
+        <?php } ?>
       </div> 
     </div> 
   </nav>
@@ -73,13 +90,11 @@ if (!isset($_SESSION['user_id'])) {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-5 p-4 text-start">
 
-          <!-- Заголовок -->
           <div class="modal-header border-0">
             <h3 class="modal-title" id="registrationModalLabel">Регистрация</h3>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
 
-          <!-- Тело формы -->
           <div class="modal-body">
             <form method="POST" action="auth.php" autocomplete="on">
               <div class="row mb-3">
@@ -104,7 +119,6 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="password" name="password" class="form-control" id="registerPassword" placeholder="Пароль" style="color:#f4f4f4; background-color: #212121;" required>
               </div>
 
-              <!-- Кнопка -->
               <div class="d-flex justify-content-between align-items-center w-100">
                 <button type="submit" name="register" class="btn btn-primary rounded-pill w-25">Далее</button>
                 <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Уже есть аккаунт?</a>
@@ -121,13 +135,11 @@ if (!isset($_SESSION['user_id'])) {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-5 p-4 text-start">
 
-          <!-- Заголовок -->
           <div class="modal-header border-0">
             <h3 class="modal-title" id="registrationModalLabel">Вход</h3>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
 
-          <!-- Тело формы -->
           <div class="modal-body">
             <form method="POST" action="auth.php">
 
@@ -141,7 +153,6 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="password" id="password" name="password" class="form-control" id="registerPassword" placeholder="Пароль" style="color:#f4f4f4; background-color: #212121;" required>
               </div>
 
-              <!-- Кнопка -->
               <button type="submit" name="login" class="btn btn-primary rounded-pill w-25">Войти</button>
             </form>
           </div>
