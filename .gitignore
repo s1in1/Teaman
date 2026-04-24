@@ -1,4 +1,6 @@
 .vscode/
 uploads/*
-todo.txt
-img/
+.env
+vendor/
+node_modules/
+db_data/
